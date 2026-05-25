@@ -1,8 +1,7 @@
-from abc import ABC, abstractmethod
 from model.classificacao_enum import ClassificacaoCultura
 from model.tipocultura_enum import TipoCultura
 
-class Cultura(ABC):
+class Planta:
     def __init__(self, nome, nome_cientifico, descricao,
                  tipo: TipoCultura, classificacao: ClassificacaoCultura):
 
@@ -59,13 +58,13 @@ class Cultura(ABC):
 
   
     def __str__(self):
-        return (
+        return f"{self.nome} ({self.nome_cientifico}) - {self.tipo.name} - {self.classificacao.name}"
+    
+    def exibir_dados(self):
+       return (
             f"Nome: {self.__nome}\n"
             f"Nome Científico: {self.__nome_cientifico}\n"
             f"Descrição: {self.__descricao}\n"
             f"Tipo: {self.__tipo.name}\n"
             f"Classificação: {self.__classificacao.name}"
         )
-    @abstractmethod
-    def exibir_dados(self):
-       pass

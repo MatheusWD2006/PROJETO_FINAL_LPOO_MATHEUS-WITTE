@@ -1,18 +1,16 @@
-from model.cultura import Cultura
-from model.estacao import Estacao
+from model.planta import Cultura
+from model.estacao_enum import NomeEstacao
 
 
 class CulturaEstacao(Cultura):
 
     def __init__(self, nome, nome_cientifico, descricao, tipo, classificacao,
-                 estacao: Estacao,
-                 nota_produtividade,
-                 nota_resistencia, recomendado="NÃO"):
+                 estacao: NomeEstacao, nota_produtividade=0, nota_resistencia=0, recomendado="NÃO"):
 
         super().__init__(nome, nome_cientifico, descricao, tipo, classificacao)
 
-        if not isinstance(estacao, Estacao):
-            raise TypeError("estacao deve ser um objeto Estacao.")
+        if not isinstance(estacao, NomeEstacao):
+            raise TypeError("estacao deve ser um objeto NomeEstacao.")
         self.__estacao = estacao
 
         self.nota_produtividade = nota_produtividade

@@ -1,12 +1,10 @@
 from datetime import date, datetime
-from model.cultura import Cultura
+from model.status_cultura_enum import StatusCultura
 
 
-class CulturaAnoTodo(Cultura):
-    def __init__(self, nome, nome_cientifico, descricao, tipo, classificacao,
-                 data_plantio=None, data_colheita=None, status=""):
-        super().__init__(nome, nome_cientifico, descricao, tipo, classificacao)
-        
+class CulturaAnoTodo:
+    def __init__(self, planta, status="StatusCultura", data_plantio=None, data_colheita=None):
+        self.planta = planta
         self.data_plantio = data_plantio
         self.data_colheita = data_colheita
         self.status = status
@@ -75,25 +73,19 @@ class CulturaAnoTodo(Cultura):
    
     def concluir(self):
 
-        if self.__status == "":
-            self.__status = "PLANTADO"
-            if self.__data_plantio is None:
-              self.__data_plantio = date.today()
-
-        elif self.__status == "PLANTADO":
-            self.__status = "COLHIDO"
-            if self.__data_colheita is None:
-              self.__data_colheita = date.today()
-
+        if self.data_plantio and self.data_colheita:
+            if self.data_colheita > self.data_plantio:
+                self.status = StatusCultura.CONCLUIDA.name
+            else:
+                raise ValueError("data_colheita deve ser posterior a data_plantio.")
         else:
-            print("Cultura já colhida. Nada a concluir.")
-
+            raise ValueError("data_plantio e data_colheita devem ser definidas para concluir a cultura.")
 
     def exibir_dados(self):
 
         return (
             
-             f"{super().__str__()}\n"
+            f"{self.planta}\n"
             f"Status: {self.__status}\n"
             f"Data de Plantio: {self.__data_plantio.strftime('%d/%m/%Y') if self.__data_plantio else 'N/A'}\n"
             f"Data de Colheita: {self.__data_colheita.strftime('%d/%m/%Y') if self.__data_colheita else 'N/A'}"
