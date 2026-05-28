@@ -4,7 +4,10 @@ create table plantas(
     planta_nome_cientifico varchar(255) not null,
     planta_descricao text,
     planta_tipo varchar(50) not null,
-    planta_classificacao varchar(50) not null
+    planta_nota_verao float,
+    planta_nota_outono float,
+    planta_nota_inverno float,
+    planta_nota_primavera float
 )
 
 create table culturas(
