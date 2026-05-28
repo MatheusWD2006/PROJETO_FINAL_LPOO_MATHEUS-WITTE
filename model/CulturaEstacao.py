@@ -1,20 +1,32 @@
 from model.estacao_enum import NomeEstacao
 from datetime import date, datetime
+from model.status_cultura_enum import StatusCultura
 
 class CulturaEstacao:
 
-    def __init__(self, planta, estacao: NomeEstacao, data_plantio=None, data_colheita=None):
+    def __init__(self, planta, estacao: NomeEstacao, status: StatusCultura = None, data_plantio=None, data_colheita=None):
         self.planta = planta
         if not isinstance(estacao, NomeEstacao):
             raise TypeError("estacao deve ser um objeto NomeEstacao.")
         self.__estacao = estacao
+        self.__status = status
         self.data_plantio = data_plantio
         self.data_colheita = data_colheita
 
     @property
     def estacao(self):
         return self.__estacao
-    
+
+    @property
+    def status(self):
+        return self.__status
+
+    @status.setter
+    def status(self, valor):
+        if valor is not None and not isinstance(valor, StatusCultura):
+            raise TypeError("status deve ser um objeto StatusCultura ou None.")
+        self.__status = valor
+        
     @property
     def data_plantio(self):
         return self.__data_plantio

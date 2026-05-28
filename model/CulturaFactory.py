@@ -15,10 +15,10 @@ class CulturaFactory:
                 nome_cientifico=kwargs.get("nome_cientifico"),
                 descricao=kwargs.get("descricao"),
                 tipo=kwargs.get("tipo"),
-                classificacao=kwargs.get("classificacao"),
                 estacao=kwargs.get("estacao"),
-                nota_produtividade=kwargs.get("nota_produtividade"),
-                nota_resistencia=kwargs.get("nota_resistencia")
+                status=kwargs.get("status"),    
+                data_plantio=kwargs.get("data_plantio"),
+                data_colheita=kwargs.get("data_colheita")
             )
 
         elif tipo_cultura == "ANO_TODO":
@@ -27,7 +27,9 @@ class CulturaFactory:
                 nome_cientifico=kwargs.get("nome_cientifico"),
                 descricao=kwargs.get("descricao"),
                 tipo=kwargs.get("tipo"),
-                classificacao=kwargs.get("classificacao")
+                status=kwargs.get("status"),
+                data_plantio=kwargs.get("data_plantio"),
+                data_colheita=kwargs.get("data_colheita")
             )
 
         else:
