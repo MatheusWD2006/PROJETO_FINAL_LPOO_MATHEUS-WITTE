@@ -1,15 +1,18 @@
-from model.classificacao_enum import ClassificacaoCultura
 from model.tipocultura_enum import TipoCultura
 
 class Planta:
     def __init__(self, nome, nome_cientifico, descricao,
-                 tipo: TipoCultura, classificacao: ClassificacaoCultura):
+                 tipo: TipoCultura, nota_inverno=0, nota_verao=0, nota_primavera=0, nota_outono=0):
 
         self.nome = nome
         self.nome_cientifico = nome_cientifico
         self.descricao = descricao
         self.tipo = tipo
-        self.classificacao = classificacao
+        self.nota_inverno = nota_inverno
+        self.nota_verao = nota_verao
+        self.nota_primavera = nota_primavera
+        self.nota_outono = nota_outono
+      
 
   
     @property
@@ -46,19 +49,59 @@ class Planta:
             raise TypeError("O campo 'tipo' deve receber um valor do enum TipoCultura.")
         self.__tipo = valor
 
-    @property
-    def classificacao(self):
-        return self.__classificacao
 
-    @classificacao.setter
-    def classificacao(self, valor):
-        if not isinstance(valor, ClassificacaoCultura):
-            raise TypeError("O campo 'classificacao' deve receber um valor do enum ClassificacaoCultura.")
-        self.__classificacao = valor
+
+    @property
+    def nota_inverno(self):
+        return self.__nota_inverno
+    
+    @nota_inverno.setter
+    def nota_inverno(self, valor):
+        if not isinstance(valor, (int, float)):
+            raise TypeError("nota_inverno deve ser numérica.")
+        if valor < 0 or valor > 10:
+            raise ValueError("nota_inverno deve estar entre 0 e 10.")
+        self.__nota_inverno = valor
+
+    @property
+    def nota_verao(self):
+        return self.__nota_verao
+    
+    @nota_verao.setter
+    def nota_verao(self, valor):
+        if not isinstance(valor, (int, float)):
+            raise TypeError("nota_verao deve ser numérica.")
+        if valor < 0 or valor > 10:
+            raise ValueError("nota_verao deve estar entre 0 e 10.")
+        self.__nota_verao = valor
+
+    @property
+    def nota_primavera(self):
+        return self.__nota_primavera
+    
+    @nota_primavera.setter
+    def nota_primavera(self, valor):
+        if not isinstance(valor, (int, float)):
+            raise TypeError("nota_primavera deve ser numérica.")
+        if valor < 0 or valor > 10:
+            raise ValueError("nota_primavera deve estar entre 0 e 10.")
+        self.__nota_primavera = valor
+
+    @property
+    def nota_outono(self):
+        return self.__nota_outono
+    
+    @nota_outono.setter
+    def nota_outono(self, valor):
+        if not isinstance(valor, (int, float)):
+            raise TypeError("nota_outono deve ser numérica.")
+        if valor < 0 or valor > 10:
+            raise ValueError("nota_outono deve estar entre 0 e 10.")
+        self.__nota_outono = valor
 
   
     def __str__(self):
-        return f"{self.nome} ({self.nome_cientifico}) - {self.tipo.name} - {self.classificacao.name}"
+        return f"{self.nome} ({self.nome_cientifico}) - {self.tipo.name}"
     
     def exibir_dados(self):
        return (
@@ -66,5 +109,4 @@ class Planta:
             f"Nome Científico: {self.__nome_cientifico}\n"
             f"Descrição: {self.__descricao}\n"
             f"Tipo: {self.__tipo.name}\n"
-            f"Classificação: {self.__classificacao.name}"
         )

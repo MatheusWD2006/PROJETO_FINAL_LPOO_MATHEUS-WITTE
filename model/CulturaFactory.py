@@ -1,4 +1,4 @@
-from model.cultura_estacao import CulturaEstacao
+from model.CulturaEstacao import CulturaEstacao
 from model.CulturaAnoTodo import CulturaAnoTodo
 
 
