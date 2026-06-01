@@ -3,14 +3,19 @@ from model.status_cultura_enum import StatusCultura
 
 
 class CulturaAnoTodo:
-    def __init__(self, planta, status="StatusCultura", data_plantio=None, data_colheita=None):
+
+    def __init__(
+        self,
+        planta,
+        status: StatusCultura =None,
+        data_plantio=None,
+        data_colheita=None
+    ):
         self.planta = planta
         self.data_plantio = data_plantio
         self.data_colheita = data_colheita
         self.status = status
 
-
-   
     @property
     def data_plantio(self):
         return self.__data_plantio
@@ -28,12 +33,22 @@ class CulturaAnoTodo:
 
         if isinstance(valor, str):
             valor = valor.strip()
-            try:
-                self.__data_plantio = datetime.strptime(valor, "%d-%m-%Y").date()
-                return
-            except ValueError:
-                raise ValueError("data_plantio deve estar no formato dd-mm-YYYY.")
 
+            try:
+                self.__data_plantio = datetime.strptime(
+                    valor,
+                    "%d-%m-%Y"
+                ).date()
+                return
+
+            except ValueError:
+                raise ValueError(
+                    "data_plantio deve estar no formato dd-mm-YYYY."
+                )
+
+        raise TypeError(
+            "data_plantio deve ser date, string no formato dd-mm-YYYY ou None."
+        )
 
     @property
     def data_colheita(self):
@@ -52,13 +67,22 @@ class CulturaAnoTodo:
 
         if isinstance(valor, str):
             valor = valor.strip()
-            try:
-                self.__data_colheita = datetime.strptime(valor, "%d-%m-%Y").date()
-                return
-            except ValueError:
-                raise ValueError("data_colheita deve estar no formato dd-mm-YYYY.")
 
-       
+            try:
+                self.__data_colheita = datetime.strptime(
+                    valor,
+                    "%d-%m-%Y"
+                ).date()
+                return
+
+            except ValueError:
+                raise ValueError(
+                    "data_colheita deve estar no formato dd-mm-YYYY."
+                )
+
+        raise TypeError(
+            "data_colheita deve ser date, string no formato dd-mm-YYYY ou None."
+        )
 
     @property
     def status(self):
@@ -66,29 +90,46 @@ class CulturaAnoTodo:
 
     @status.setter
     def status(self, valor):
-        if not isinstance(valor, str):
-            raise TypeError("status deve ser uma string.")
-        self.__status = valor.upper()
 
-   
+        if valor is None:
+            self.__status = None
+            return
+
+        if not isinstance(valor, StatusCultura):
+            raise TypeError(
+                "status deve ser None ou uma instância de StatusCultura."
+            )
+
+        self.__status = valor
+
     def concluir(self):
 
-        if self.data_plantio and self.data_colheita:
-            if self.data_colheita > self.data_plantio:
-                self.status = StatusCultura.CONCLUIDA.name
-            else:
-                raise ValueError("data_colheita deve ser posterior a data_plantio.")
-        else:
-            raise ValueError("data_plantio e data_colheita devem ser definidas para concluir a cultura.")
+        if self.data_plantio is None:
+            raise ValueError(
+                "data_plantio deve estar definida."
+            )
+
+        if self.data_colheita is None:
+            raise ValueError(
+                "data_colheita deve estar definida."
+            )
+
+        if self.data_colheita <= self.data_plantio:
+            raise ValueError(
+                "data_colheita deve ser posterior à data_plantio."
+            )
+
+        self.status = StatusCultura.COLHIDO
 
     def exibir_dados(self):
 
         return (
-            
-            f"{self.planta}\n"
-            f"Status: {self.__status}\n"
-            f"Data de Plantio: {self.__data_plantio.strftime('%d/%m/%Y') if self.__data_plantio else 'N/A'}\n"
-            f"Data de Colheita: {self.__data_colheita.strftime('%d/%m/%Y') if self.__data_colheita else 'N/A'}"
+            f"Planta: {self.planta}\n"
+            f"Status: {self.__status.value if self.__status else 'N/A'}\n"
+            f"Data de Plantio: "
+            f"{self.__data_plantio.strftime('%d/%m/%Y') if self.__data_plantio else 'N/A'}\n"
+            f"Data de Colheita: "
+            f"{self.__data_colheita.strftime('%d/%m/%Y') if self.__data_colheita else 'N/A'}"
         )
 
     def __str__(self):
