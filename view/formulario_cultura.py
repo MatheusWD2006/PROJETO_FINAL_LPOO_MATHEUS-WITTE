@@ -1,3 +1,8 @@
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 import tkinter as tk
 from tkinter import ttk, messagebox
 from controller.cultura_control import CulturaController
@@ -181,7 +186,7 @@ class FormCultura(tk.Toplevel):
         nome = self.planta_var.get().strip()
         for p in self._plantas_disponiveis:
             if p.nome == nome:
-                return p.id
+                return p.planta_id
         return None
 
     def _salvar(self):

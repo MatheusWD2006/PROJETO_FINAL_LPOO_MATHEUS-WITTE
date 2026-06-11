@@ -1,3 +1,8 @@
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from model.CulturaEstacao import CulturaEstacao
 from model.CulturaAnoTodo import CulturaAnoTodo
 

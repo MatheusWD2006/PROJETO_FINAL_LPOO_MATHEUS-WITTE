@@ -12,7 +12,7 @@ create table plantas(
 
 create table culturas(
     cultura_id serial primary key,
-    cultutura_tipo varchar(50) not null,
+    cultura_tipo varchar(50) not null,
     cultura_estacao varchar(50) null,
     planta_id int not null,
     cultura_status varchar(50) not null,

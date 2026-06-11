@@ -1,3 +1,8 @@
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from model.planta import Planta
 from model.tipocultura_enum import TipoCultura
 from dao.planta_dao import PlantaDAO
@@ -22,7 +27,7 @@ class PlantaController:
                 nota_primavera=float(nota_primavera),
                 nota_outono=float(nota_outono)
             )
-            self.dao.inserir(planta)
+            self.dao.salvar(planta)
             return True, "Planta cadastrada com sucesso!"
         except (TypeError, ValueError) as e:
             return False, str(e)
@@ -31,7 +36,7 @@ class PlantaController:
 
     def listar(self):
         try:
-            return True, self.dao.buscar_todos()
+            return True, self.dao.listar_todos()
         except Exception as e:
             return False, f"Erro ao listar plantas: {e}"
 
@@ -104,7 +109,7 @@ class PlantaController:
 
     def deletar(self, id):
         try:
-            self.dao.deletar(id)
+            self.dao.remover(id)
             return True, "Planta removida com sucesso!"
         except Exception as e:
             return False, f"Erro ao remover planta: {e}"

@@ -1,3 +1,8 @@
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from model.CulturaFactory import CulturaFactory
 from model.estacao_enum import NomeEstacao
 from model.status_cultura_enum import StatusCultura
@@ -44,7 +49,7 @@ class CulturaController:
                 kwargs["estacao"] = NomeEstacao(estacao)
 
             cultura = CulturaFactory.criar_cultura(tipo_cultura, **kwargs)
-            self.dao.inserir(cultura, planta_id)
+            self.dao.salvar(cultura, planta_id)
             return True, "Cultura cadastrada com sucesso!"
         except (TypeError, ValueError) as e:
             return False, str(e)
@@ -53,7 +58,7 @@ class CulturaController:
 
     def listar(self):
         try:
-            return True, self.dao.buscar_todos()
+            return True, self.dao.listar_todos()
         except Exception as e:
             return False, f"Erro ao listar culturas: {e}"
 
@@ -119,7 +124,7 @@ class CulturaController:
 
     def deletar(self, id):
         try:
-            self.dao.deletar(id)
+            self.dao.remover(id)
             return True, "Cultura removida com sucesso!"
         except Exception as e:
             return False, f"Erro ao remover cultura: {e}"

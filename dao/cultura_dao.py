@@ -1,3 +1,8 @@
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from dao.generic_dao import GenericDAO
 from dao.db_config import DBConfig
 from model.CulturaFactory import CulturaFactory
@@ -43,7 +48,12 @@ class CulturaDAO(GenericDAO):
         conn = DBConfig.get_connection()
         try:
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM culturas WHERE cultura_id = %s", (id,))
+            
+            cursor.execute("""
+                SELECT cultura_id, planta_id, cultura_status, cultura_data_plantio, 
+                       cultura_data_colheita, cultura_tipo, cultura_estacao 
+                FROM culturas WHERE cultura_id = %s
+            """, (id,))
             row = cursor.fetchone()
             return self.__montar_cultura(row) if row else None
         finally:
@@ -53,7 +63,12 @@ class CulturaDAO(GenericDAO):
         conn = DBConfig.get_connection()
         try:
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM culturas ORDER BY cultura_id")
+           
+            cursor.execute("""
+                SELECT cultura_id, planta_id, cultura_status, cultura_data_plantio, 
+                       cultura_data_colheita, cultura_tipo, cultura_estacao 
+                FROM culturas ORDER BY cultura_id
+            """)
             return [self.__montar_cultura(row) for row in cursor.fetchall()]
         finally:
             conn.close()
@@ -91,18 +106,24 @@ class CulturaDAO(GenericDAO):
             conn.close()
 
     def __montar_cultura(self, row):
-        # row: (id, planta_id, status, data_plantio, data_colheita, tipo, estacao)
+        
         planta = self.planta_dao.buscar_por_id(row[1])
         tipo = row[5]
         estacao = row[6]
 
         kwargs = {
             "planta": planta,
-            "status": StatusCultura(row[2]),
+            "status": StatusCultura(row[2]) if row[2] else None,
             "data_plantio": row[3],
             "data_colheita": row[4],
         }
         if tipo == "ESTACAO":
-            kwargs["estacao"] = NomeEstacao(estacao)
+            kwargs["estacao"] = NomeEstacao(estacao) if estacao else None
 
-        return CulturaFactory.criar_cultura(tipo, **kwargs)
+       
+        cultura = CulturaFactory.criar_cultura(tipo, **kwargs)
+        
+        
+        cultura.cultura_id = row[0]
+        
+        return cultura

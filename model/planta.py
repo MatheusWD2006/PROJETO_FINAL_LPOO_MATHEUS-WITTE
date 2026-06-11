@@ -1,9 +1,15 @@
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from model.tipocultura_enum import TipoCultura
 
 class Planta:
-    def __init__(self, nome, nome_cientifico, descricao,
-                 tipo: TipoCultura, nota_inverno=0, nota_verao=0, nota_primavera=0, nota_outono=0):
+    def __init__(self, nome, nome_cientifico, descricao, tipo: TipoCultura, 
+                 nota_inverno=0, nota_verao=0, nota_primavera=0, nota_outono=0, planta_id=None):
 
+        self.planta_id = planta_id  
         self.nome = nome
         self.nome_cientifico = nome_cientifico
         self.descricao = descricao
@@ -12,9 +18,15 @@ class Planta:
         self.nota_verao = nota_verao
         self.nota_primavera = nota_primavera
         self.nota_outono = nota_outono
-      
+        
+    @property
+    def planta_id(self):
+        return self.__planta_id
 
-  
+    @planta_id.setter
+    def planta_id(self, valor):
+        self.__planta_id = valor
+
     @property
     def nome(self):
         return self.__nome
@@ -48,8 +60,6 @@ class Planta:
         if not isinstance(valor, TipoCultura):
             raise TypeError("O campo 'tipo' deve receber um valor do enum TipoCultura.")
         self.__tipo = valor
-
-
 
     @property
     def nota_inverno(self):
@@ -99,12 +109,11 @@ class Planta:
             raise ValueError("nota_outono deve estar entre 0 e 10.")
         self.__nota_outono = valor
 
-  
     def __str__(self):
         return f"{self.nome} ({self.nome_cientifico}) - {self.tipo.name}"
     
     def exibir_dados(self):
-       return (
+        return (
             f"Nome: {self.__nome}\n"
             f"Nome Científico: {self.__nome_cientifico}\n"
             f"Descrição: {self.__descricao}\n"

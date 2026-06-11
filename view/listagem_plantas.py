@@ -1,3 +1,8 @@
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 import tkinter as tk
 from tkinter import ttk, messagebox
 from controller.planta_control import PlantaController
@@ -68,11 +73,11 @@ class ListagemPlantas(tk.Toplevel):
             return
 
         for p in plantas:
-            self.tabela.insert("", "end", iid=p.id, values=(
-                p.id, p.nome, p.nome_cientifico, p.tipo.value,
-                p.nota_verao, p.nota_outono, p.nota_inverno, p.nota_primavera
-            ))
-
+               
+                self.tabela.insert("", "end", iid=p.planta_id, values=(
+                    p.planta_id, p.nome, p.nome_cientifico, p.tipo.value,
+                    p.nota_verao, p.nota_outono, p.nota_inverno, p.nota_primavera
+                ))
    
 
     def _get_id_selecionado(self):

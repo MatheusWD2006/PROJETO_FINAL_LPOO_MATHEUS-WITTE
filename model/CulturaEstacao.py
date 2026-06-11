@@ -1,3 +1,8 @@
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from model.estacao_enum import NomeEstacao
 from datetime import date, datetime
 from model.status_cultura_enum import StatusCultura

@@ -1,3 +1,8 @@
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from dao.generic_dao import GenericDAO
 from dao.db_config import DBConfig
 from model.planta import Planta
@@ -21,7 +26,7 @@ class PlantaDAO(GenericDAO):
                 planta.nota_inverno, planta.nota_primavera
             ))
             conn.commit()
-            return cursor.fetchone()[0]  # retorna o id gerado
+            return cursor.fetchone()[0]
         finally:
             conn.close()
 
@@ -82,6 +87,7 @@ class PlantaDAO(GenericDAO):
             conn.close()
 
     def __montar_planta(self, row):
+        
         return Planta(
             nome=row[1],
             nome_cientifico=row[2],
@@ -90,5 +96,6 @@ class PlantaDAO(GenericDAO):
             nota_verao=row[5],
             nota_outono=row[6],
             nota_inverno=row[7],
-            nota_primavera=row[8]
+            nota_primavera=row[8],
+            planta_id=row[0] 
         )
