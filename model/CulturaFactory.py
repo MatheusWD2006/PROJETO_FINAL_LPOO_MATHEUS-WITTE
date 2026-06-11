@@ -12,7 +12,6 @@ class CulturaFactory:
         if tipo_cultura == "ESTACAO":
             return CulturaEstacao(
                 planta=kwargs.get("planta"),
-                tipo=kwargs.get("tipo"),
                 estacao=kwargs.get("estacao"),
                 status=kwargs.get("status"),    
                 data_plantio=kwargs.get("data_plantio"),
@@ -22,7 +21,6 @@ class CulturaFactory:
         elif tipo_cultura == "ANO_TODO":
             return CulturaAnoTodo(
                 planta=kwargs.get("planta"),
-                tipo=kwargs.get("tipo"),
                 status=kwargs.get("status"),
                 data_plantio=kwargs.get("data_plantio"),
                 data_colheita=kwargs.get("data_colheita")

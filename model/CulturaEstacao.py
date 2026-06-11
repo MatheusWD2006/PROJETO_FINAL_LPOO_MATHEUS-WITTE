@@ -118,6 +118,23 @@ class CulturaEstacao:
         raise TypeError(
             "data_colheita deve ser date, string no formato dd-mm-YYYY ou None."
         )
+    
+    def plantar(self):
+        if self.status == StatusCultura.PLANTADO:
+            raise ValueError("Cultura já está plantada.")
+        if self.status == StatusCultura.COLHIDO:
+            raise ValueError("Cultura já foi colhida.")
+        self.status = StatusCultura.PLANTADO
+        self.data_plantio = date.today()
+
+    def colher(self):
+        if self.data_plantio is None:
+            raise ValueError("data_plantio deve estar definida.")
+        if self.status != StatusCultura.PLANTADO:
+            raise ValueError("Cultura precisa estar plantada para ser colhida.")
+        self.status = StatusCultura.COLHIDO
+        self.data_colheita = date.today()
+        
 
     def exibir_dados(self):
 
