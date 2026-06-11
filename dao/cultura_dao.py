@@ -10,7 +10,7 @@ class CulturaDAO(GenericDAO):
         from dao.planta_dao import PlantaDAO
         self.planta_dao = PlantaDAO()
 
-    def inserir(self, cultura, planta_id):
+    def salvar(self, cultura, planta_id):
         conn = DBConfig.get_connection()
         try:
             cursor = conn.cursor()
@@ -49,7 +49,7 @@ class CulturaDAO(GenericDAO):
         finally:
             conn.close()
 
-    def buscar_todos(self):
+    def listar_todos(self):
         conn = DBConfig.get_connection()
         try:
             cursor = conn.cursor()
@@ -81,7 +81,7 @@ class CulturaDAO(GenericDAO):
         finally:
             conn.close()
 
-    def deletar(self, id):
+    def remover(self, id):
         conn = DBConfig.get_connection()
         try:
             cursor = conn.cursor()

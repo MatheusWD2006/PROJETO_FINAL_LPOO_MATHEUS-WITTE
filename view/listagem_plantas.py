@@ -83,16 +83,22 @@ class ListagemPlantas(tk.Toplevel):
         return int(selecionado[0])
 
     def _nova(self):
-        FormPlanta(self)
-        self.wait_window()
+       
+        form = FormPlanta(self)
+        
+        self.wait_window(form)
+        
         self._carregar()
 
     def _editar(self):
         id_ = self._get_id_selecionado()
         if id_ is None:
             return
-        FormPlanta(self, planta_id=id_)
-        self.wait_window()
+       
+        form = FormPlanta(self, planta_id=id_)
+        
+        self.wait_window(form)
+       
         self._carregar()
 
     def _excluir(self):

@@ -5,7 +5,7 @@ from model.tipocultura_enum import TipoCultura
 
 class PlantaDAO(GenericDAO):
 
-    def inserir(self, planta: Planta):
+    def salvar(self, planta: Planta):
         conn = DBConfig.get_connection()
         try:
             cursor = conn.cursor()
@@ -35,7 +35,7 @@ class PlantaDAO(GenericDAO):
         finally:
             conn.close()
 
-    def buscar_todos(self):
+    def listar_todos(self):
         conn = DBConfig.get_connection()
         try:
             cursor = conn.cursor()
@@ -63,7 +63,7 @@ class PlantaDAO(GenericDAO):
         finally:
             conn.close()
 
-    def deletar(self, id):
+    def remover(self, id):
         conn = DBConfig.get_connection()
         try:
             cursor = conn.cursor()

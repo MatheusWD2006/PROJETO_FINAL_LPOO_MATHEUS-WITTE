@@ -119,18 +119,23 @@ class ListagemCulturas(tk.Toplevel):
         return self.tabela.item(selecionado[0])["values"]
 
     def _nova(self):
-        FormCultura(self)
-        self.wait_window()
+      
+        form = FormCultura(self)
+        
+        self.wait_window(form)
         self._carregar()
 
     def _editar(self):
         id_ = self._get_id_selecionado()
         if id_ is None:
             return
-        FormCultura(self, cultura_id=id_)
-        self.wait_window()
+       
+        form = FormCultura(self, cultura_id=id_)
+       
+        self.wait_window(form)
         self._carregar()
 
+        
     def _excluir(self):
         id_ = self._get_id_selecionado()
         if id_ is None:
