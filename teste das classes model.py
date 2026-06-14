@@ -4,8 +4,8 @@ import os
 
 sys.path.append(os.path.dirname(__file__))
 
-from model.CulturaAnoTodo import CulturaAnoTodo
-from model.CulturaEstacao import CulturaEstacao
+#from model.CulturaAnoTodo import CulturaAnoTodo
+#from model.CulturaEstacao import CulturaEstacao
 from model.CulturaFactory import CulturaFactory
 from model.estacao_enum import NomeEstacao
 

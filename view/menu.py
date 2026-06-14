@@ -11,14 +11,16 @@ from view.sobre import Sobre
 
 class Menu(tk.Tk):
 
+    # Inicializa a nova instância da classe.
     def __init__(self):
         super().__init__()
         self.title("Sistema de Gestão de Culturas")
         self.geometry("400x300")
         self.resizable(False, False)
-        self._build()
+        self.criar()
 
-    def _build(self):
+    # Constrói e exibe elementos visuais ou objetos necessários.
+    def criar(self):
        
         frame = tk.Frame(self)
         frame.place(relx=0.5, rely=0.5, anchor="center")

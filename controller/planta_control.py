@@ -11,15 +11,28 @@ NOTA_MINIMA = 6.0
 
 class PlantaController:
 
+    # Inicializa a nova instância da classe.
     def __init__(self):
         self.dao = PlantaDAO()
 
+    # Formata o nome científico no padrão correto de maiúsculas e minúsculas.
+    def formatar_nome_cientifico(self, nome: str) -> str:
+        partes = nome.strip().split()
+        if not partes:
+            return ""
+        partes[0] = partes[0].capitalize()
+        for i in range(1, len(partes)):
+            partes[i] = partes[i].lower()
+        return " ".join(partes)
+
+    # Realiza a ação cadastrar.
     def cadastrar(self, nome, nome_cientifico, descricao, tipo,
                   nota_inverno, nota_verao, nota_primavera, nota_outono):
         try:
+            nome_cientifico_correto = self.formatar_nome_cientifico(nome_cientifico)
             planta = Planta(
                 nome=nome,
-                nome_cientifico=nome_cientifico,
+                nome_cientifico=nome_cientifico_correto,
                 descricao=descricao,
                 tipo=TipoCultura(tipo),
                 nota_inverno=float(nota_inverno),
@@ -34,12 +47,14 @@ class PlantaController:
         except Exception as e:
             return False, f"Erro inesperado: {e}"
 
+    # Retorna uma lista de registros.
     def listar(self):
         try:
             return True, self.dao.listar_todos()
         except Exception as e:
             return False, f"Erro ao listar plantas: {e}"
 
+    # Busca um registro pelo identificador.
     def buscar_por_id(self, id):
         try:
             planta = self.dao.buscar_por_id(id)
@@ -49,12 +64,14 @@ class PlantaController:
         except Exception as e:
             return False, f"Erro ao buscar planta: {e}"
 
+    # Busca registros cuja nome contenha a sequência informada.
     def buscar_por_nome(self, nome):
         try:
             return True, self.dao.buscar_por_nome(nome)
         except Exception as e:
             return False, f"Erro ao buscar planta: {e}"
 
+    # Retorna as plantas disponíveis conforme o tipo de cultura e estação.
     def buscar_disponiveis_por_tipo(self, tipo_cultura, estacao=None):
         try:
             sucesso, plantas = self.listar()
@@ -87,12 +104,14 @@ class PlantaController:
         except Exception as e:
             return False, f"Erro ao buscar plantas disponíveis: {e}"
 
+    # Atualiza o registro existente no banco de dados.
     def atualizar(self, id, nome, nome_cientifico, descricao, tipo,
                   nota_inverno, nota_verao, nota_primavera, nota_outono):
         try:
+            nome_cientifico_correto = self.formatar_nome_cientifico(nome_cientifico)
             planta = Planta(
                 nome=nome,
-                nome_cientifico=nome_cientifico,
+                nome_cientifico=nome_cientifico_correto,
                 descricao=descricao,
                 tipo=TipoCultura(tipo),
                 nota_inverno=float(nota_inverno),
@@ -107,6 +126,7 @@ class PlantaController:
         except Exception as e:
             return False, f"Erro inesperado: {e}"
 
+    # Remove o registro selecionado.
     def deletar(self, id):
         try:
             self.dao.remover(id)

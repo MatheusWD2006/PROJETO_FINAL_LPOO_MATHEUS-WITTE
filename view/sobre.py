@@ -8,6 +8,7 @@ import tkinter as tk
 
 class Sobre(tk.Toplevel):
 
+    # Inicializa a nova instância da classe.
     def __init__(self, parent):
         super().__init__(parent)
         self.title("Sobre")
@@ -15,9 +16,10 @@ class Sobre(tk.Toplevel):
         self.resizable(False, False)
         self.grab_set()
 
-        self.construir()
+        self.criar()
 
-    def construir(self):
+    # Constrói e exibe elementos visuais ou objetos necessários.
+    def criar(self):
         frame = tk.Frame(self, padx=20, pady=20)
         frame.place(relx=0.5, rely=0.5, anchor="center")
 

@@ -11,6 +11,7 @@ from model.tipocultura_enum import TipoCultura
 
 class FormPlanta(tk.Toplevel):
 
+    # Inicializa a nova instância da classe.
     def __init__(self, parent, planta_id=None):
         super().__init__(parent)
         self.title("Nova Planta" if planta_id is None else "Editar Planta")
@@ -20,14 +21,15 @@ class FormPlanta(tk.Toplevel):
         self.controller = PlantaController()
         self.planta_id = planta_id
 
-        self._build_form()
+        self.criar_form()
 
         if planta_id:
-            self._preencher_edicao()
+            self.preencher_edicao()
 
    
 
-    def _build_form(self):
+    # Cria os widgets do formulário.
+    def criar_form(self):
         pad = {"padx": 10, "pady": 5}
 
         
@@ -74,15 +76,16 @@ class FormPlanta(tk.Toplevel):
         self.nota_primavera_var = tk.StringVar()
         tk.Entry(self, textvariable=self.nota_primavera_var, width=35).grid(row=7, column=1, **pad)
 
-        # --- Botões ---
+        
         frame_botoes = tk.Frame(self)
         frame_botoes.grid(row=8, column=0, columnspan=2, pady=10)
-        tk.Button(frame_botoes, text="Salvar",   width=15, command=self._salvar).pack(side="left", padx=5)
+        tk.Button(frame_botoes, text="Salvar",   width=15, command=self.salvar).pack(side="left", padx=5)
         tk.Button(frame_botoes, text="Cancelar", width=15, command=self.destroy).pack(side="left", padx=5)
 
    
 
-    def _validar(self):
+    # Valida os campos do formulário antes de salvar.
+    def validar(self):
         if not self.nome_var.get().strip():
             messagebox.showerror("Erro", "Nome é obrigatório.", parent=self)
             return False
@@ -113,8 +116,9 @@ class FormPlanta(tk.Toplevel):
 
    
 
-    def _salvar(self):
-        if not self._validar():
+    # Salva o objeto no banco de dados.
+    def salvar(self):
+        if not self.validar():
             return
 
         nome            = self.nome_var.get().strip()
@@ -144,7 +148,8 @@ class FormPlanta(tk.Toplevel):
             messagebox.showerror("Erro", msg, parent=self)
 
    
-    def _preencher_edicao(self):
+    # Preenche o formulário com os dados do item para edição.
+    def preencher_edicao(self):
         sucesso, planta = self.controller.buscar_por_id(self.planta_id)
         if not sucesso:
             messagebox.showerror("Erro", planta, parent=self)

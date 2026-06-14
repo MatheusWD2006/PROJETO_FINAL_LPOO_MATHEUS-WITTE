@@ -12,10 +12,12 @@ from datetime import date
 
 class CulturaController:
 
+    # Inicializa a nova instância da classe.
     def __init__(self):
         self.dao = CulturaDAO()
         self.planta_dao = PlantaDAO()
 
+    # Método auxiliar para processamento interno.
     def _validar_datas_status(self, status, data_plantio, data_colheita):
         if status == StatusCultura.PLANTADO.value:
             if not data_plantio:
@@ -25,6 +27,7 @@ class CulturaController:
                 return False, "Ambas as datas são obrigatórias para status Colhido."
         return True, None
 
+    # Realiza a ação cadastrar.
     def cadastrar(self, planta_id, tipo_cultura, status, data_plantio,
                   data_colheita, estacao=None):
         try:
@@ -56,12 +59,14 @@ class CulturaController:
         except Exception as e:
             return False, f"Erro inesperado: {e}"
 
+    # Retorna uma lista de registros.
     def listar(self):
         try:
             return True, self.dao.listar_todos()
         except Exception as e:
             return False, f"Erro ao listar culturas: {e}"
 
+    # Busca um registro pelo identificador.
     def buscar_por_id(self, id):
         try:
             cultura = self.dao.buscar_por_id(id)
@@ -71,6 +76,7 @@ class CulturaController:
         except Exception as e:
             return False, f"Erro ao buscar cultura: {e}"
 
+    # Atualiza o registro existente no banco de dados.
     def atualizar(self, id, status, data_plantio, data_colheita):
         try:
             if status:
@@ -93,6 +99,7 @@ class CulturaController:
         except Exception as e:
             return False, f"Erro inesperado: {e}"
 
+    # Marca a cultura como plantada e registra a data de plantio.
     def plantar(self, id):
         try:
             sucesso, cultura = self.buscar_por_id(id)
@@ -108,6 +115,7 @@ class CulturaController:
         except Exception as e:
             return False, f"Erro inesperado: {e}"
 
+    # Marca a cultura como colhida e registra a data de colheita.
     def colher(self, id):
         try:
             sucesso, cultura = self.buscar_por_id(id)
@@ -122,6 +130,7 @@ class CulturaController:
         except Exception as e:
             return False, f"Erro inesperado: {e}"
 
+    # Remove o registro selecionado.
     def deletar(self, id):
         try:
             self.dao.remover(id)

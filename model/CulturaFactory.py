@@ -10,6 +10,7 @@ from model.CulturaAnoTodo import CulturaAnoTodo
 class CulturaFactory:
 
     @staticmethod
+    # Cria uma instância de cultura adequada ao tipo informado.
     def criar_cultura(tipo_cultura: str, **kwargs):
         
         tipo_cultura = tipo_cultura.upper().strip()

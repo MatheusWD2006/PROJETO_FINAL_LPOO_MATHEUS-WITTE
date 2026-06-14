@@ -12,17 +12,19 @@ from view.formulario_cultura import FormCultura
 
 class ListagemCulturas(tk.Toplevel):
 
+    # Inicializa a nova instância da classe.
     def __init__(self, parent):
         super().__init__(parent)
         self.title("Culturas")
         self.geometry("900x400")
         self.controller = CulturaController()
 
-        self._build_tabela()
-        self._build_botoes()
-        self._carregar()
+        self.criar_tabela()
+        self.criar_botoes()
+        self.carregar()
 
-    def _build_tabela(self):
+    # Cria a tabela listagem na interface gráfica.
+    def criar_tabela(self):
         colunas = ("id", "planta", "tipo", "estacao", "status", "plantio", "colheita")
         self.tabela = ttk.Treeview(self, columns=colunas, show="headings")
 
@@ -48,25 +50,27 @@ class ListagemCulturas(tk.Toplevel):
         self.tabela.pack(side="left", fill="both", expand=True)
         scroll.pack(side="left", fill="y")
 
-        self.tabela.bind("<<TreeviewSelect>>", self._ao_selecionar)
+        self.tabela.bind("<<TreeviewSelect>>", self.ao_selecionar)
 
-    def _build_botoes(self):
+    # Cria os botões de ação na interface gráfica.
+    def criar_botoes(self):
         frame = tk.Frame(self)
         frame.pack(side="right", fill="y", padx=10, pady=10)
 
-        tk.Button(frame, text="Nova",    width=15, command=self._nova).pack(pady=3)
-        tk.Button(frame, text="Editar",  width=15, command=self._editar).pack(pady=3)
-        tk.Button(frame, text="Excluir", width=15, command=self._excluir).pack(pady=3)
+        tk.Button(frame, text="Nova",    width=15, command=self.nova).pack(pady=3)
+        tk.Button(frame, text="Editar",  width=15, command=self.editar).pack(pady=3)
+        tk.Button(frame, text="Excluir", width=15, command=self.excluir).pack(pady=3)
 
         self.btn_plantar = tk.Button(frame, text="Plantar", width=15,
-                                     command=self._plantar, state="disabled")
+                                     command=self.plantar, state="disabled")
         self.btn_plantar.pack(pady=3)
 
         self.btn_colher = tk.Button(frame, text="Colher", width=15,
-                                    command=self._colher, state="disabled")
+                                    command=self.colher, state="disabled")
         self.btn_colher.pack(pady=3)
 
-    def _carregar(self):
+    # Realiza a ação carregar.
+    def carregar(self):
         for row in self.tabela.get_children():
             self.tabela.delete(row)
 
@@ -81,15 +85,16 @@ class ListagemCulturas(tk.Toplevel):
             plantio  = c.data_plantio.strftime("%d/%m/%Y")  if c.data_plantio  else "-"
             colheita = c.data_colheita.strftime("%d/%m/%Y") if c.data_colheita else "-"
 
-            # ✨ Corrigido de iid=c.id para iid=c.cultura_id para refletir os modelos e DAOs atualizados
+           
             self.tabela.insert("", "end", iid=c.cultura_id, values=(
                 c.cultura_id, c.planta.nome,
                 "Ano Todo" if not hasattr(c, "estacao") else "Estação",
                 estacao, status, plantio, colheita
             ))
 
-    def _ao_selecionar(self, event):
-        selecionado = self._get_selecionado()
+    # Atualiza os botões quando uma cultura é selecionada.
+    def ao_selecionar(self, event):
+        selecionado = self.pegar_selecionado()
         if selecionado is None:
             return
 
@@ -101,39 +106,44 @@ class ListagemCulturas(tk.Toplevel):
         elif status == StatusCultura.PLANTADO.value:
             self.btn_plantar.config(state="disabled")
             self.btn_colher.config(state="normal")
-        else:  # sem status ou PENDENTE
+        else:
             self.btn_plantar.config(state="normal")
             self.btn_colher.config(state="disabled")
 
-    def _get_id_selecionado(self):
+    # Retorna o id do item selecionado na tabela.
+    def pegar_id_selecionado(self):
         selecionado = self.tabela.selection()
         if not selecionado:
             messagebox.showwarning("Aviso", "Selecione uma cultura.", parent=self)
             return None
         return int(selecionado[0])
 
-    def _get_selecionado(self):
+    # Retorna os dados do item selecionado na tabela.
+    def pegar_selecionado(self):
         selecionado = self.tabela.selection()
         if not selecionado:
             return None
         return self.tabela.item(selecionado[0])["values"]
 
-    def _nova(self):
+    # Abre o formulário para cadastro de um novo item.
+    def nova(self):
         form = FormCultura(self)
         self.wait_window(form)
-        self._carregar()
+        self.carregar()
 
-    def _editar(self):
-        id_ = self._get_id_selecionado()
+    # Abre o formulário para editar o item selecionado.
+    def editar(self):
+        id_ = self.pegar_id_selecionado()
         if id_ is None:
             return
        
         form = FormCultura(self, cultura_id=id_)
         self.wait_window(form)
-        self._carregar()
+        self.carregar()
 
-    def _excluir(self):
-        id_ = self._get_id_selecionado()
+    # Exclui o item selecionado após confirmação.
+    def excluir(self):
+        id_ = self.pegar_id_selecionado()
         if id_ is None:
             return
         if not messagebox.askyesno("Confirmar", "Deseja excluir esta cultura?", parent=self):
@@ -141,28 +151,30 @@ class ListagemCulturas(tk.Toplevel):
         sucesso, msg = self.controller.deletar(id_)
         if sucesso:
             messagebox.showinfo("Sucesso", msg, parent=self)
-            self._carregar()
+            self.carregar()
         else:
             messagebox.showerror("Erro", msg, parent=self)
 
-    def _plantar(self):
-        id_ = self._get_id_selecionado()
+    # Marca a cultura como plantada e registra a data de plantio.
+    def plantar(self):
+        id_ = self.pegar_id_selecionado()
         if id_ is None:
             return
         sucesso, msg = self.controller.plantar(id_)
         if sucesso:
             messagebox.showinfo("Sucesso", msg, parent=self)
-            self._carregar()
+            self.carregar()
         else:
             messagebox.showerror("Erro", msg, parent=self)
 
-    def _colher(self):
-        id_ = self._get_id_selecionado()
+    # Marca a cultura como colhida e registra a data de colheita.
+    def colher(self):
+        id_ = self.pegar_id_selecionado()
         if id_ is None:
             return
         sucesso, msg = self.controller.colher(id_)
         if sucesso:
             messagebox.showinfo("Sucesso", msg, parent=self)
-            self._carregar()
+            self.carregar()
         else:
             messagebox.showerror("Erro", msg, parent=self)

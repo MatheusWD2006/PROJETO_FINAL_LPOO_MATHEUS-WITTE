@@ -3,6 +3,7 @@ from psycopg2 import Error
 
 class DBConfig:
     @staticmethod
+    # Retorna a conexão com o banco de dados PostgreSQL.
     def get_connection():
         try:
             conexao = psycopg2.connect(

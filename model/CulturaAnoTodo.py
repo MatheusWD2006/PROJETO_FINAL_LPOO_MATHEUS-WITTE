@@ -9,6 +9,7 @@ from model.status_cultura_enum import StatusCultura
 
 class CulturaAnoTodo:
 
+    # Inicializa a nova instância da classe.
     def __init__(
         self,
         planta,
@@ -21,10 +22,12 @@ class CulturaAnoTodo:
         self.data_colheita = data_colheita
         self.status = status
 
+    # Realiza a ação data_plantio.
     @property
     def data_plantio(self):
         return self.__data_plantio
 
+    # Realiza a ação data_plantio.
     @data_plantio.setter
     def data_plantio(self, valor):
 
@@ -55,10 +58,12 @@ class CulturaAnoTodo:
             "data_plantio deve ser date, string no formato dd-mm-YYYY ou None."
         )
 
+    # Realiza a ação data_colheita.
     @property
     def data_colheita(self):
         return self.__data_colheita
 
+    # Realiza a ação data_colheita.
     @data_colheita.setter
     def data_colheita(self, valor):
 
@@ -89,10 +94,12 @@ class CulturaAnoTodo:
             "data_colheita deve ser date, string no formato dd-mm-YYYY ou None."
         )
 
+    # Realiza a ação status.
     @property
     def status(self):
         return self.__status
 
+    # Realiza a ação status.
     @status.setter
     def status(self, valor):
 
@@ -107,6 +114,7 @@ class CulturaAnoTodo:
 
         self.__status = valor
 
+    # Marca a cultura como plantada e registra a data de plantio.
     def plantar(self):
         if self.status == StatusCultura.PLANTADO:
             raise ValueError("Cultura já está plantada.")
@@ -115,6 +123,7 @@ class CulturaAnoTodo:
         self.status = StatusCultura.PLANTADO
         self.data_plantio = date.today()
 
+    # Marca a cultura como colhida e registra a data de colheita.
     def colher(self):
         if self.data_plantio is None:
             raise ValueError("data_plantio deve estar definida.")
@@ -123,6 +132,7 @@ class CulturaAnoTodo:
         self.status = StatusCultura.COLHIDO
         self.data_colheita = date.today()
 
+    # Retorna uma string formatada com os dados do objeto.
     def exibir_dados(self):
 
         return (
@@ -134,5 +144,6 @@ class CulturaAnoTodo:
             f"{self.__data_colheita.strftime('%d/%m/%Y') if self.__data_colheita else 'N/A'}"
         )
 
+    # Retorna a representação em string deste objeto.
     def __str__(self):
         return self.exibir_dados()

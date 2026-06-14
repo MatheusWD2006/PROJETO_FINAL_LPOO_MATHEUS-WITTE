@@ -11,10 +11,12 @@ from model.estacao_enum import NomeEstacao
 
 class CulturaDAO(GenericDAO):
 
+    # Inicializa a nova instância da classe.
     def __init__(self):
         from dao.planta_dao import PlantaDAO
         self.planta_dao = PlantaDAO()
 
+    # Salva o objeto no banco de dados.
     def salvar(self, cultura, planta_id):
         conn = DBConfig.get_connection()
         try:
@@ -44,6 +46,7 @@ class CulturaDAO(GenericDAO):
         finally:
             conn.close()
 
+    # Busca um registro pelo identificador.
     def buscar_por_id(self, id):
         conn = DBConfig.get_connection()
         try:
@@ -55,10 +58,11 @@ class CulturaDAO(GenericDAO):
                 FROM culturas WHERE cultura_id = %s
             """, (id,))
             row = cursor.fetchone()
-            return self.__montar_cultura(row) if row else None
+            return self.montar_cultura(row) if row else None
         finally:
             conn.close()
 
+    # Retorna todos os registros tratados por este DAO.
     def listar_todos(self):
         conn = DBConfig.get_connection()
         try:
@@ -69,10 +73,11 @@ class CulturaDAO(GenericDAO):
                        cultura_data_colheita, cultura_tipo, cultura_estacao 
                 FROM culturas ORDER BY cultura_id
             """)
-            return [self.__montar_cultura(row) for row in cursor.fetchall()]
+            return [self.montar_cultura(row) for row in cursor.fetchall()]
         finally:
             conn.close()
 
+    # Atualiza o registro existente no banco de dados.
     def atualizar(self, id, cultura):
         conn = DBConfig.get_connection()
         try:
@@ -96,6 +101,7 @@ class CulturaDAO(GenericDAO):
         finally:
             conn.close()
 
+    # Remove o registro identificado no banco de dados.
     def remover(self, id):
         conn = DBConfig.get_connection()
         try:
@@ -105,7 +111,8 @@ class CulturaDAO(GenericDAO):
         finally:
             conn.close()
 
-    def __montar_cultura(self, row):
+    # Constrói um objeto Cultura a partir de uma linha do banco de dados.
+    def montar_cultura(self, row):
         
         planta = self.planta_dao.buscar_por_id(row[1])
         tipo = row[5]

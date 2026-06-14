@@ -11,18 +11,20 @@ from view.formulario_plantas import FormPlanta
 
 class ListagemPlantas(tk.Toplevel):
 
+    # Inicializa a nova instância da classe.
     def __init__(self, parent):
         super().__init__(parent)
         self.title("Plantas")
         self.geometry("850x400")
         self.controller = PlantaController()
 
-        self._build_tabela()
-        self._build_botoes()
-        self._carregar()
+        self.criar_tabela()
+        self.criar_botoes()
+        self.carregar()
 
    
-    def _build_tabela(self):
+    # Cria a tabela listagem na interface gráfica.
+    def criar_tabela(self):
         colunas = ("id", "nome", "nome_cientifico", "tipo",
                    "nota_verao", "nota_outono", "nota_inverno", "nota_primavera")
         self.tabela = ttk.Treeview(self, columns=colunas, show="headings")
@@ -53,17 +55,19 @@ class ListagemPlantas(tk.Toplevel):
 
     
 
-    def _build_botoes(self):
+    # Cria os botões de ação na interface gráfica.
+    def criar_botoes(self):
         frame = tk.Frame(self)
         frame.pack(side="right", fill="y", padx=10, pady=10)
 
-        tk.Button(frame, text="Nova",    width=15, command=self._nova).pack(pady=3)
-        tk.Button(frame, text="Editar",  width=15, command=self._editar).pack(pady=3)
-        tk.Button(frame, text="Excluir", width=15, command=self._excluir).pack(pady=3)
+        tk.Button(frame, text="Nova",    width=15, command=self.nova).pack(pady=3)
+        tk.Button(frame, text="Editar",  width=15, command=self.editar).pack(pady=3)
+        tk.Button(frame, text="Excluir", width=15, command=self.excluir).pack(pady=3)
 
     
 
-    def _carregar(self):
+    # Realiza a ação carregar.
+    def carregar(self):
         for row in self.tabela.get_children():
             self.tabela.delete(row)
 
@@ -80,23 +84,26 @@ class ListagemPlantas(tk.Toplevel):
                 ))
    
 
-    def _get_id_selecionado(self):
+    # Retorna o id do item selecionado na tabela.
+    def pegar_id_selecionado(self):
         selecionado = self.tabela.selection()
         if not selecionado:
             messagebox.showwarning("Aviso", "Selecione uma planta.", parent=self)
             return None
         return int(selecionado[0])
 
-    def _nova(self):
+    # Abre o formulário para cadastro de um novo item.
+    def nova(self):
        
         form = FormPlanta(self)
         
         self.wait_window(form)
         
-        self._carregar()
+        self.carregar()
 
-    def _editar(self):
-        id_ = self._get_id_selecionado()
+    # Abre o formulário para editar o item selecionado.
+    def editar(self):
+        id_ = self.pegar_id_selecionado()
         if id_ is None:
             return
        
@@ -104,10 +111,11 @@ class ListagemPlantas(tk.Toplevel):
         
         self.wait_window(form)
        
-        self._carregar()
+        self.carregar()
 
-    def _excluir(self):
-        id_ = self._get_id_selecionado()
+    # Exclui o item selecionado após confirmação.
+    def excluir(self):
+        id_ = self.pegar_id_selecionado()
         if id_ is None:
             return
         if not messagebox.askyesno("Confirmar", "Deseja excluir esta planta?", parent=self):
@@ -115,6 +123,6 @@ class ListagemPlantas(tk.Toplevel):
         sucesso, msg = self.controller.deletar(id_)
         if sucesso:
             messagebox.showinfo("Sucesso", msg, parent=self)
-            self._carregar()
+            self.carregar()
         else:
             messagebox.showerror("Erro", msg, parent=self)

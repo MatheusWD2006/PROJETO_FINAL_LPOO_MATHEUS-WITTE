@@ -13,6 +13,7 @@ from model.status_cultura_enum import StatusCultura
 
 class FormCultura(tk.Toplevel):
 
+    # Inicializa a nova instância da classe.
     def __init__(self, parent, cultura_id=None):
         super().__init__(parent)
         self.title("Nova Cultura" if cultura_id is None else "Editar Cultura")
@@ -24,12 +25,13 @@ class FormCultura(tk.Toplevel):
         self.cultura_id = cultura_id
         self._plantas_disponiveis = []
 
-        self._build_form()
+        self.criar_form()
 
         if cultura_id:
-            self._preencher_edicao()
+            self.preencher_edicao()
 
-    def _build_form(self):
+    # Cria os widgets do formulário.
+    def criar_form(self):
         pad = {"padx": 10, "pady": 5}
 
         tk.Label(self, text="Tipo *").grid(row=0, column=0, sticky="w", **pad)
@@ -42,7 +44,7 @@ class FormCultura(tk.Toplevel):
             width=35
         )
         self.combo_tipo.grid(row=0, column=1, **pad)
-        self.combo_tipo.bind("<<ComboboxSelected>>", self._ao_mudar_tipo)
+        self.combo_tipo.bind("<<ComboboxSelected>>", self.ao_mudar_tipo)
 
         tk.Label(self, text="Estação").grid(row=1, column=0, sticky="w", **pad)
         self.estacao_var = tk.StringVar()
@@ -54,13 +56,13 @@ class FormCultura(tk.Toplevel):
             width=35
         )
         self.combo_estacao.grid(row=1, column=1, **pad)
-        self.estacao_var.trace_add("write", self._filtrar_estacao)
-        self.combo_estacao.bind("<<ComboboxSelected>>", self._ao_mudar_estacao)
+        self.estacao_var.trace_add("write", self.filtrar_estacao)
+        self.combo_estacao.bind("<<ComboboxSelected>>", self.ao_mudar_estacao)
 
         self.btn_buscar = tk.Button(
             self,
             text="Buscar Plantas Disponíveis",
-            command=self._buscar_plantas,
+            command=self.buscar_plantas,
             state="disabled"
         )
         self.btn_buscar.grid(row=2, column=0, columnspan=2, pady=5)
@@ -74,7 +76,7 @@ class FormCultura(tk.Toplevel):
             width=35
         )
         self.combo_planta.grid(row=3, column=1, **pad)
-        self.planta_var.trace_add("write", self._filtrar_plantas)
+        self.planta_var.trace_add("write", self.filtrar_plantas)
 
         tk.Label(self, text="Status").grid(row=4, column=0, sticky="w", **pad)
         self.status_var = tk.StringVar()
@@ -99,10 +101,11 @@ class FormCultura(tk.Toplevel):
 
         frame_botoes = tk.Frame(self)
         frame_botoes.grid(row=7, column=0, columnspan=2, pady=10)
-        tk.Button(frame_botoes, text="Salvar", width=15, command=self._salvar).pack(side="left", padx=5)
+        tk.Button(frame_botoes, text="Salvar", width=15, command=self.salvar).pack(side="left", padx=5)
         tk.Button(frame_botoes, text="Cancelar", width=15, command=self.destroy).pack(side="left", padx=5)
 
-    def _ao_mudar_tipo(self, event):
+    # Altera a interface de formulário quando o tipo de cultura muda.
+    def ao_mudar_tipo(self, event):
         tipo = self.tipo_var.get()
         if tipo == "ESTACAO":
             self.combo_estacao.config(state="normal")
@@ -116,11 +119,13 @@ class FormCultura(tk.Toplevel):
         self.combo_planta.config(state="disabled")
         self._plantas_disponiveis = []
 
-    def _ao_mudar_estacao(self, event):
+    # Ativa a busca de plantas ao selecionar uma estação.
+    def ao_mudar_estacao(self, event):
         if self.estacao_var.get():
             self.btn_buscar.config(state="normal")
 
-    def _filtrar_estacao(self, *args):
+    # Filtra a lista de estações com base no texto digitado.
+    def filtrar_estacao(self, *args):
         if str(self.combo_estacao["state"]) == "disabled":
             return
         texto = self.estacao_var.get().lower().strip()
@@ -133,7 +138,8 @@ class FormCultura(tk.Toplevel):
         if filtradas:
             self.combo_estacao.event_generate('<Down>')
 
-    def _buscar_plantas(self):
+    # Busca plantas disponíveis para o tipo de cultura selecionado.
+    def buscar_plantas(self):
         tipo = self.tipo_var.get()
         estacao = self.estacao_var.get() if tipo == "ESTACAO" else None
 
@@ -151,7 +157,8 @@ class FormCultura(tk.Toplevel):
         self.combo_planta.config(state="normal")
         self.planta_var.set("")
 
-    def _filtrar_plantas(self, *args):
+    # Filtra a lista de plantas com base no texto digitado.
+    def filtrar_plantas(self, *args):
         if self.combo_planta["state"] == "disabled":
             return
         texto = self.planta_var.get().lower().strip()
@@ -164,7 +171,8 @@ class FormCultura(tk.Toplevel):
         if filtradas:
             self.combo_planta.event_generate('<Down>')
 
-    def _validar(self):
+    # Valida os campos do formulário antes de salvar.
+    def validar(self):
         if not self.tipo_var.get():
             messagebox.showerror("Erro", "Selecione o tipo de cultura.", parent=self)
             return False
@@ -176,20 +184,17 @@ class FormCultura(tk.Toplevel):
             return False
         return True
 
-    def _get_planta_id(self):
+    # Obtém o item ou identificador selecionado na interface.
+    def pegar_planta_id(self):
         nome = self.planta_var.get().strip()
         for p in self._plantas_disponiveis:
             if p.nome == nome:
                 return p.planta_id
         return None
 
-    def _salvar(self):
-        if not self._validar():
-            return
-
-        planta_id = self._get_planta_id()
-        if planta_id is None:
-            messagebox.showerror("Erro", "Planta não encontrada.", parent=self)
+    # Salva o objeto no banco de dados.
+    def salvar(self):
+        if not self.validar():
             return
 
         tipo = self.tipo_var.get()
@@ -199,6 +204,11 @@ class FormCultura(tk.Toplevel):
         data_colheita = self.data_colheita_var.get().strip() or None
 
         if self.cultura_id is None:
+            planta_id = self.pegar_planta_id()
+            if planta_id is None:
+                messagebox.showerror("Erro", "Planta não encontrada.", parent=self)
+                return
+
             sucesso, msg = self.cultura_controller.cadastrar(
                 planta_id=planta_id,
                 tipo_cultura=tipo,
@@ -218,7 +228,8 @@ class FormCultura(tk.Toplevel):
         else:
             messagebox.showerror("Erro", msg, parent=self)
 
-    def _preencher_edicao(self):
+    # Preenche o formulário com os dados do item para edição.
+    def preencher_edicao(self):
         sucesso, cultura = self.cultura_controller.buscar_por_id(self.cultura_id)
         if not sucesso:
             messagebox.showerror("Erro", cultura, parent=self)

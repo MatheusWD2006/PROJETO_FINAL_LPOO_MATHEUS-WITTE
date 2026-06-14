@@ -10,6 +10,7 @@ from model.tipocultura_enum import TipoCultura
 
 class PlantaDAO(GenericDAO):
 
+    # Salva o objeto no banco de dados.
     def salvar(self, planta: Planta):
         conn = DBConfig.get_connection()
         try:
@@ -30,25 +31,28 @@ class PlantaDAO(GenericDAO):
         finally:
             conn.close()
 
+    # Busca um registro pelo identificador.
     def buscar_por_id(self, id):
         conn = DBConfig.get_connection()
         try:
             cursor = conn.cursor()
             cursor.execute("SELECT * FROM plantas WHERE planta_id = %s", (id,))
             row = cursor.fetchone()
-            return self.__montar_planta(row) if row else None
+            return self.montar_planta(row) if row else None
         finally:
             conn.close()
 
+    # Retorna todos os registros tratados por este DAO.
     def listar_todos(self):
         conn = DBConfig.get_connection()
         try:
             cursor = conn.cursor()
             cursor.execute("SELECT * FROM plantas ORDER BY planta_nome")
-            return [self.__montar_planta(row) for row in cursor.fetchall()]
+            return [self.montar_planta(row) for row in cursor.fetchall()]
         finally:
             conn.close()
 
+    # Atualiza o registro existente no banco de dados.
     def atualizar(self, id, planta: Planta):
         conn = DBConfig.get_connection()
         try:
@@ -68,6 +72,7 @@ class PlantaDAO(GenericDAO):
         finally:
             conn.close()
 
+    # Remove o registro identificado no banco de dados.
     def remover(self, id):
         conn = DBConfig.get_connection()
         try:
@@ -77,16 +82,18 @@ class PlantaDAO(GenericDAO):
         finally:
             conn.close()
 
+    # Busca registros cuja nome contenha a sequência informada.
     def buscar_por_nome(self, nome):
         conn = DBConfig.get_connection()
         try:
             cursor = conn.cursor()
             cursor.execute("SELECT * FROM plantas WHERE planta_nome ILIKE %s", (f"%{nome}%",))
-            return [self.__montar_planta(row) for row in cursor.fetchall()]
+            return [self.montar_planta(row) for row in cursor.fetchall()]
         finally:
             conn.close()
 
-    def __montar_planta(self, row):
+    # Constrói um objeto Planta a partir de uma linha do banco de dados.
+    def montar_planta(self, row):
         
         return Planta(
             nome=row[1],
