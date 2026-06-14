@@ -15,7 +15,7 @@ create table culturas(
     cultura_tipo varchar(50) not null,
     cultura_estacao varchar(50) null,
     planta_id int not null,
-    cultura_status varchar(50) not null,
+    cultura_status varchar(50) null,
     cultura_data_plantio date,
     cultura_data_colheita date,
     foreign key (planta_id) references plantas(planta_id)
