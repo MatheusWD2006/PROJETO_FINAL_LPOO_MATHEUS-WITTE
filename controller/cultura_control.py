@@ -114,7 +114,7 @@ class CulturaController:
             if not sucesso:
                 return False, cultura
 
-            cultura.concluir()
+            cultura.colher()
             self.dao.atualizar(id, cultura)
             return True, "Cultura colhida com sucesso!"
         except (TypeError, ValueError) as e:

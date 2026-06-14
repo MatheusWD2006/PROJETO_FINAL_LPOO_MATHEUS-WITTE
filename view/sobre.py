@@ -11,7 +11,7 @@ class Sobre(tk.Toplevel):
     def __init__(self, parent):
         super().__init__(parent)
         self.title("Sobre")
-        self.geometry("800x500")
+        self.geometry("1100x600")
         self.resizable(False, False)
         self.grab_set()
 
@@ -47,7 +47,8 @@ class Sobre(tk.Toplevel):
         tk.Label(
             frame,
             text="Desenvolvido por: Matheus Witte Ditz, " \
-            "estudante no 3° ano de Ciências da Computação no IFSUL de Passo Fundo RS.",
+            "estudante no 3° ano do curso de Bacharelado em Ciências da Computação" \
+            " no IFSUL de Passo Fundo RS.",
             font=("Arial", 10, "bold")
         ).pack()
 

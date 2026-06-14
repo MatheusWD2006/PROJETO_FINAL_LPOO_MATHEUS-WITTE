@@ -22,8 +22,6 @@ class ListagemCulturas(tk.Toplevel):
         self._build_botoes()
         self._carregar()
 
-   
-
     def _build_tabela(self):
         colunas = ("id", "planta", "tipo", "estacao", "status", "plantio", "colheita")
         self.tabela = ttk.Treeview(self, columns=colunas, show="headings")
@@ -52,7 +50,6 @@ class ListagemCulturas(tk.Toplevel):
 
         self.tabela.bind("<<TreeviewSelect>>", self._ao_selecionar)
 
-    
     def _build_botoes(self):
         frame = tk.Frame(self)
         frame.pack(side="right", fill="y", padx=10, pady=10)
@@ -69,7 +66,6 @@ class ListagemCulturas(tk.Toplevel):
                                     command=self._colher, state="disabled")
         self.btn_colher.pack(pady=3)
 
-   
     def _carregar(self):
         for row in self.tabela.get_children():
             self.tabela.delete(row)
@@ -85,8 +81,9 @@ class ListagemCulturas(tk.Toplevel):
             plantio  = c.data_plantio.strftime("%d/%m/%Y")  if c.data_plantio  else "-"
             colheita = c.data_colheita.strftime("%d/%m/%Y") if c.data_colheita else "-"
 
-            self.tabela.insert("", "end", iid=c.id, values=(
-                c.id, c.planta.nome,
+            # ✨ Corrigido de iid=c.id para iid=c.cultura_id para refletir os modelos e DAOs atualizados
+            self.tabela.insert("", "end", iid=c.cultura_id, values=(
+                c.cultura_id, c.planta.nome,
                 "Ano Todo" if not hasattr(c, "estacao") else "Estação",
                 estacao, status, plantio, colheita
             ))
@@ -98,18 +95,16 @@ class ListagemCulturas(tk.Toplevel):
 
         status = selecionado[4]  
 
-       
         if status == StatusCultura.COLHIDO.value:
             self.btn_plantar.config(state="disabled")
             self.btn_colher.config(state="disabled")
         elif status == StatusCultura.PLANTADO.value:
             self.btn_plantar.config(state="disabled")
             self.btn_colher.config(state="normal")
-        else:  # sem status
+        else:  # sem status ou PENDENTE
             self.btn_plantar.config(state="normal")
             self.btn_colher.config(state="disabled")
 
-   
     def _get_id_selecionado(self):
         selecionado = self.tabela.selection()
         if not selecionado:
@@ -124,9 +119,7 @@ class ListagemCulturas(tk.Toplevel):
         return self.tabela.item(selecionado[0])["values"]
 
     def _nova(self):
-      
         form = FormCultura(self)
-        
         self.wait_window(form)
         self._carregar()
 
@@ -136,11 +129,9 @@ class ListagemCulturas(tk.Toplevel):
             return
        
         form = FormCultura(self, cultura_id=id_)
-       
         self.wait_window(form)
         self._carregar()
 
-        
     def _excluir(self):
         id_ = self._get_id_selecionado()
         if id_ is None:
